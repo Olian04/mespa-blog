@@ -64,6 +64,8 @@ For example:
 
 SPA vs MPA: https://youtu.be/ivLhf3hq7eM
 
+npm init: https://docs.npmjs.com/cli/v7/commands/npm-init
+
 MDX: https://v2.mdxjs.com/docs/
 
 watch file: https://nodejs.org/docs/latest/api/fs.html
