@@ -63,3 +63,5 @@ For example:
 ## Resources
 
 SPA vs MPA: https://youtu.be/ivLhf3hq7eM
+
+MDX: https://v2.mdxjs.com/docs/
