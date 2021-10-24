@@ -1,4 +1,4 @@
-# Multi Entry Single Page Applications - Blogg
+# A Multi-Entry Single-Page-Applications blog template
 
 ```shell
 $ npm init mespa-blog
