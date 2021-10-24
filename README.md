@@ -1,7 +1,7 @@
 # Single Multiple Page App - Blogg
 
 ```shell
-$ npx smpa-blog init
+$ npm init smpa-blog
 /posts/2021_10_24.0.md
 /posts/2021_10_22.0.md
 /style/post.css
