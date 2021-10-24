@@ -65,3 +65,5 @@ For example:
 SPA vs MPA: https://youtu.be/ivLhf3hq7eM
 
 MDX: https://v2.mdxjs.com/docs/
+
+watch file: https://nodejs.org/docs/latest/api/fs.html
