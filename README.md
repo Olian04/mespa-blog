@@ -1,13 +1,13 @@
-# Single Multiple Page App - Blogg
+# Multi Entry Single Page Applications - Blogg
 
 ```shell
-$ npm init smpa-blog
+$ npm init mespa-blog
 /posts/2021_10_24.0.md
 /posts/2021_10_22.0.md
 /style/post.css
 /style/navigation.css
 package.json
-smpa.config.json
+mespa.config.json
 $ npm run build
 /dist/serve.js
 /dist/manifest.json
@@ -42,7 +42,7 @@ For example:
 ```
 
 
-The `smpa.config.json` file contains all configuration needed to run the build command.
+The `mespa.config.json` file contains all configuration needed to run the build command.
 For example:
 
 ```json
