@@ -1,7 +1,7 @@
 import FS from 'fs/promises';
-import { join as joinPath } from 'path';
 import Mustache from 'mustache';
 import Markdown from 'markdown-it';
+import { Path } from './util';
 
 const md = new Markdown();
 
@@ -28,10 +28,9 @@ const renderTemplate = (templateString: string, props: TemplateProps) =>
 (async () => {
   const { default: config } = await import('../mespa.config.json');
 
-  const Path = {
-    relativeToRoot: (...path: string[]) => joinPath(__dirname, '..', ...path),
-    relativeToSelf: (...path: string[]) => joinPath(__dirname, ...path),
-  };
+  //TODO: Separate build for development & build for production
+  //TODO: Use the public root for production builds
+  config.output.publicRoot;
 
   const emitFile = async (fileContents: string, ...path: string[]) => {
     const joinedPath = Path.relativeToRoot(

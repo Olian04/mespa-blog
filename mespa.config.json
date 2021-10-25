@@ -4,6 +4,7 @@
     "post_dir": "./post"
   },
   "output": {
-    "dir": "./dist"
+    "dir": "./dist",
+    "publicRoot": "/mespa-blog/"
   }
 }
