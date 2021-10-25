@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script defer src="./script/spoof_index_url.js"></script>
+  <title>2021-10-24.1.md</title>
+</head>
+
+<body>
+
+  <div class="post-feed">
+    <div class="post-container">
+      <h1><em>2021-10-24</em> <strong>1</strong></h1>
+<p>Hello world</p>
+
+    </div>
+  </div>
+
+  <button onclick="onClickPrevious()" id="previousPostBtn">Load Previous Post</button>
+
+
+  <script>
+    const bufferPreviousPost = document.createElement('iframe');
+    bufferPreviousPost.src = '/post/2021-10-24/0';
+    bufferPreviousPost.style.display = 'none';
+    document.body.appendChild(bufferPreviousPost);
+
+    function onClickPrevious() {
+      // TODO: Add event listener on iframe to listen for "load" event
+      // TODO: Add spinner to indicate loading IF previous btn was clicked before iframe load event fires
+
+      const innerDoc = bufferPreviousPost.contentDocument ?? bufferPreviousPost.contentWindow.document;
+      const metaData = innerDoc.head.querySelector('[name="mespa-blog"]');
+      const previousPostURI = metaData.getAttribute('data-previous-post');
+
+      const postContainer = document.createElement('div');
+      postContainer.classList.add('post-container');
+      postContainer.append(...innerDoc.body.childNodes);
+      document.querySelector('.post-feed').insertAdjacentElement("beforeend", postContainer);
+
+
+      if (previousPostURI === 'undefined') {
+        document.querySelector('#previousPostBtn').disabled = true;
+        bufferPreviousPost.remove();
+      } else {
+        bufferPreviousPost.src = previousPostURI;
+      }
+    }
+  </script>
+</body>
+
+</html>

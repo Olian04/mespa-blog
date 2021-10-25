@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2021-10-19.0.md</title>
+</head>
+
+<body>
+  <button onclick="onClickNext()" id="nextPostBtn">Load Next Post</button>
+
+  <div class="post-feed">
+    <div class="post-container">
+      <h1><em>2021-10-19</em> <strong>0</strong></h1>
+<p>Hello world</p>
+
+    </div>
+  </div>
+
+
+  <script>
+    const bufferNextPost = document.createElement('iframe');
+    bufferNextPost.src = '/post/2021-10-20/0';
+    bufferNextPost.style.display = 'none';
+    document.body.appendChild(bufferNextPost);
+
+    function onClickNext() {
+      const innerDoc = bufferNextPost.contentDocument ?? bufferNextPost.contentWindow.document;
+      const metaData = innerDoc.head.querySelector('[name="mespa-blog"]');
+      const nextPostURI = metaData.getAttribute('data-next-post');
+
+      const postContainer = document.createElement('div');
+      postContainer.classList.add('post-container');
+      postContainer.append(...innerDoc.body.childNodes);
+      document.querySelector('.post-feed').insertAdjacentElement("afterbegin", postContainer);
+
+
+      if (nextPostURI === 'undefined') {
+        document.querySelector('#nextPostBtn').disabled = true;
+        bufferNextPost.remove();
+      } else {
+        bufferNextPost.src = nextPostURI;
+      }
+    }
+  </script>
+
+</body>
+
+</html>
