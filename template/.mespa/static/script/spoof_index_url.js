@@ -1,1 +1,1 @@
-window.history.pushState(null, '', window.location.href + '{{pathToLatestPost}}');
+window.history.pushState(null, '', window.location.href + '{{&pathToLatestPost}}');

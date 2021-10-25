@@ -10,10 +10,17 @@ type TemplateProps = Partial<{
   postBody: string;
   isIndexPage: boolean;
   pathToLatestPost: string;
+  pathToNextPost: string;
+  pathToPreviousPost: string;
 }>;
 
 const splitFileName = (fileName: string) =>
   fileName.substring(0, fileName.length - '.md'.length).split('.');
+
+const makeResourcePath = (prefix: string, fileName: string) => {
+  const [dateString, indexString] = splitFileName(fileName);
+  return `${prefix}${dateString}/${indexString}`;
+};
 
 const renderTemplate = (templateString: string, props: TemplateProps) =>
   Mustache.render(templateString, props);
@@ -26,8 +33,20 @@ const renderTemplate = (templateString: string, props: TemplateProps) =>
     relativeToSelf: (...path: string[]) => joinPath(__dirname, ...path),
   };
 
-  const emitFile = (fileContents: string, ...path: string[]) =>
-    FS.writeFile(Path.relativeToRoot(config.output.dir, ...path), fileContents);
+  const emitFile = async (fileContents: string, ...path: string[]) => {
+    const joinedPath = Path.relativeToRoot(
+      config.output.dir,
+      ...path.slice(0, path.length - 1)
+    );
+    await FS.mkdir(joinedPath, {
+      recursive: true,
+    });
+
+    return FS.writeFile(
+      Path.relativeToRoot(config.output.dir, ...path),
+      fileContents
+    );
+  };
 
   const postFiles = (
     await FS.readdir(Path.relativeToRoot(config.input.post_dir))
@@ -49,36 +68,64 @@ const renderTemplate = (templateString: string, props: TemplateProps) =>
   ).toString();
 
   const [fileName, fileContents] = posts[0];
-  const [dateString, indexString] = splitFileName(fileName);
-  const spoofIndexURLScriptTemplate = (
-    await FS.readFile(Path.relativeToRoot(config.input.post_dir, fileName))
-  ).toString();
-
   const indexPageHTML = renderTemplate(pageTemplate, {
     postBody: fileContents,
     pageTitle: fileName,
     isIndexPage: true,
+    pathToPreviousPost: posts[1]
+      ? makeResourcePath('/post/', posts[1][0])
+      : undefined,
   });
-  emitFile(indexPageHTML, dateString, indexString + '.html');
+  emitFile(indexPageHTML, 'index.html');
 
+  const spoofIndexURLScriptTemplate = (
+    await FS.readFile(
+      Path.relativeToSelf('static', 'script', 'spoof_index_url.js')
+    )
+  ).toString();
   const spoofIndexURLScriptContents = renderTemplate(
     spoofIndexURLScriptTemplate,
     {
       isIndexPage: true,
-      pathToLatestPost: `./${dateString}/${indexString}`,
+      pathToLatestPost: makeResourcePath('', fileName),
     }
   );
   emitFile(spoofIndexURLScriptContents, 'script', 'spoof_index_url.js');
 
-  for (const [fileName, fileContentsHTML] of posts) {
-    const [dateString, indexString] = splitFileName(fileName);
+  for (let i = 0; i < posts.length; i++) {
+    const [postFileName, postContentsHTML] = posts[i];
+    const [dateString, indexString] = splitFileName(postFileName);
+
+    const resourcePathForNextPost = posts[i - 1]
+      ? makeResourcePath('/post/', posts[i - 1][0])
+      : undefined;
+
+    const resourcePathForPreviousPost = posts[i + 1]
+      ? makeResourcePath('/post/', posts[i + 1][0])
+      : undefined;
+
     const pageHTML = renderTemplate(pageTemplate, {
-      postBody: fileContentsHTML,
-      pageTitle: fileName,
+      postBody: postContentsHTML,
+      pageTitle: postFileName,
       isIndexPage: false,
+      pathToNextPost: resourcePathForNextPost,
+      pathToPreviousPost: resourcePathForPreviousPost,
     });
 
-    emitFile(fileContentsHTML, 'post', dateString, indexString + '.html');
+    emitFile(
+      `
+    <meta name="mespa-blog"
+        content="Configuration data for mespa navigation"
+        data-next-post="${resourcePathForNextPost}"
+        data-previous-post="${resourcePathForPreviousPost}"
+        data-this-post="${makeResourcePath('/post/', postFileName)}"
+    />
+    ${postContentsHTML}`,
+      'post',
+      dateString,
+      indexString + '.html'
+    );
+
     emitFile(pageHTML, dateString, indexString + '.html');
   }
 })();
