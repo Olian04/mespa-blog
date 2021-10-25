@@ -1,0 +1,9 @@
+{
+  "input": {
+    "style_dir": "./style",
+    "post_dir": "./post"
+  },
+  "output": {
+    "dir": "./dist"
+  }
+}
