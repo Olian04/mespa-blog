@@ -1,5 +1,7 @@
 # Multi-Entry Single-Page-Application (blog)
 
+Project is still very much a work in progress. In other words, it doesn't yet work as expected.
+
 Usage:
 
 1. Create new repo using this repo as a temple
